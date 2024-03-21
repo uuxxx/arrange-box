@@ -18,7 +18,7 @@ export default [
   {
     id: 'Blue Band',
     img: 'https://primefaces.org/cdn/primeng/images/demo/product/blue-band.jpg',
-    name: 'Black Band',
+    name: 'Blue Band',
     categorieLabel: 'sell',
     categorie: 'Accessories',
     price: '170',
@@ -57,7 +57,7 @@ export default [
   },
   {
     id: 'Brown purse',
-    img: '	https://primefaces.org/cdn/primeng/images/demo/product/brown-purse.jpg',
+    img: 'https://primefaces.org/cdn/primeng/images/demo/product/brown-purse.jpg',
     name: 'Brown purse',
     categorieLabel: 'sell',
     categorie: 'Accessories',
@@ -65,7 +65,7 @@ export default [
   },
   {
     id: 'Chackra bracelet',
-    img: '	https://primefaces.org/cdn/primeng/images/demo/product/chakra-bracelet.jpg',
+    img: 'https://primefaces.org/cdn/primeng/images/demo/product/chakra-bracelet.jpg',
     name: 'Chackra bracelet',
     categorieLabel: 'sell',
     categorie: 'Accessories',

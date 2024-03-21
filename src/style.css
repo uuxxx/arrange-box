@@ -34,7 +34,6 @@ body {
   font-family: "Poppins", sans-serif;
   font-weight: 400;
   font-style: normal;
-  height: 100vh;
   background: var(--surface-ground);
   color: var(--text-color);
 }
@@ -59,8 +58,30 @@ body {
   opacity: .8;
 }
 
+.test-btn-block {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+.reset-btn, .log-btn {
+  background: var(--card-border-color);
+  color: var(--text-color);
+  padding: 5px 10px;
+}
+
+.reset-btn:hover, .log-btn:hover {
+  opacity: .8;
+  cursor: pointer;
+}
+
 #app {
-  min-height: 100vh;
+  margin-top: 100px;
   display: flex;
   flex-direction: column;
   justify-content: center;
