@@ -58,41 +58,34 @@ body {
   opacity: .8;
 }
 
-.test-btn-block {
-  position: absolute;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 5px;
-}
-
-.reset-btn, .log-btn {
-  background: var(--card-border-color);
-  color: var(--text-color);
-  padding: 5px 10px;
-}
-
-.reset-btn:hover, .log-btn:hover {
-  opacity: .8;
-  cursor: pointer;
-}
-
 #app {
-  margin-top: 100px;
+  margin-top: 50px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 100px;
 }
 
 .arrange-box {
   display: flex;
   justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 50px;
+}
+
+.arrange-box-main {
+  display: flex;
+  justify-content: center;
   flex-direction: row;
+}
+
+#other-btns {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  height: 30px;
 }
 
 .pick-list-buttons {
@@ -103,7 +96,7 @@ body {
   gap: 10px;
 }
 
-.pick-list-buttons > button {
+.pick-list-buttons > button, #other-btns > button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -114,7 +107,7 @@ body {
   transition: background .2s;
 }
 
-.pick-list-buttons > button:enabled:hover {
+.pick-list-buttons > button:enabled:hover, #other-btns > button:enabled:hover {
   cursor: pointer;
   background: var(--button-background-on-hover);
 }
@@ -207,7 +200,7 @@ body {
 
 
 @media screen and (max-width: 900px) {
-  .arrange-box {
+  .arrange-box-main {
     flex-direction: column;
   }
 

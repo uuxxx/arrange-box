@@ -50,16 +50,10 @@ function generateRandomArrangeBox() {
   );
 }
 
-const arrangeBox = new ArrangeBox(
+new ArrangeBox(
   document.getElementById('app')!,
   toArrangeBoxElements(testingItems)
 );
 
 const addRandomControl = document.getElementById('add-control')!;
-const resetBtn = document.getElementById('reset-btn')!;
-const logBtn = document.getElementById('log-btn')!;
-
-resetBtn.onclick = () => arrangeBox.reset();
-logBtn.onclick = () => console.log(arrangeBox.getState());
-
 addRandomControl.onclick = generateRandomArrangeBox;

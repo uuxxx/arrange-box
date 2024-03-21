@@ -1,12 +1,12 @@
 import Sortable from 'sortablejs';
 import { ArrangeBoxElement } from './ArrangeBoxElement';
-import { InputItem } from './types';
+import { InputItem, ControlButton } from './types';
 import { debounce } from '../utils';
 
 export class ArrangeBox {
   private uid = `_${crypto.randomUUID()}`;
 
-  private controlAvailableButtons = [
+  private controlAvailableButtons: ControlButton[] = [
     {
       id: 'available-up',
       listener: () => this.moveFocusedUp('available'),
@@ -28,7 +28,7 @@ export class ArrangeBox {
       icon: 'keyboard_double_arrow_down',
     },
   ];
-  private controlMovingBetweenListsButtons = [
+  private controlMovingBetweenListsButtons: ControlButton[] = [
     {
       id: 'focused-from-available-to-selected',
       listener: () => this.moveFocusedSelectedToAvailable(),
@@ -50,7 +50,7 @@ export class ArrangeBox {
       icon: 'keyboard_double_arrow_right',
     },
   ];
-  private controlSelectedButtons = [
+  private controlSelectedButtons: ControlButton[] = [
     {
       id: 'selected-up',
       listener: () => this.moveFocusedUp('selected'),
@@ -71,6 +71,15 @@ export class ArrangeBox {
       listener: () => this.moveFocusedToTheBottom('selected'),
       icon: 'keyboard_double_arrow_down',
     },
+  ];
+  private otherControlButtons: ControlButton[] = [
+    { id: 'reset', listener: () => this.reset(), text: 'reset' },
+    {
+      id: 'log state',
+      listener: () => console.log(this.getState()),
+      text: 'log state',
+    },
+    { id: 'destroy', listener: () => this.destroy(), text: 'destroy' },
   ];
 
   private arrangeBoxElementsMap: { [x: InputItem['id']]: ArrangeBoxElement } =
@@ -195,45 +204,48 @@ export class ArrangeBox {
     this.$arrangeBoxContainer = $arrangeBoxContainer;
     $arrangeBoxContainer.classList.add('arrange-box');
     $arrangeBoxContainer.innerHTML = /* HTML */ `
-      <div id="available-btns" class="pick-list-buttons"></div>
-      <div class="pick-list">
-        <div class="pick-list__header">Available</div>
-        <div class="pick-list__filter-container">
-          <div class="pick-list__filter">
-            <input
-              id="${this.uid}-available-filter-input"
-              type="text"
-              placeholder="Search by name"
-            />
-            <span class="material-symbols-outlined pick-list__search-icon">
-              search
-            </span>
+      <div id="other-btns"></div>
+      <div class="arrange-box-main">
+        <div id="available-btns" class="pick-list-buttons"></div>
+        <div class="pick-list">
+          <div class="pick-list__header">Available</div>
+          <div class="pick-list__filter-container">
+            <div class="pick-list__filter">
+              <input
+                id="${this.uid}-available-filter-input"
+                type="text"
+                placeholder="Search by name"
+              />
+              <span class="material-symbols-outlined pick-list__search-icon">
+                search
+              </span>
+            </div>
           </div>
+
+          <ul id="available-items" class="pick-list__items"></ul>
         </div>
 
-        <ul id="available-items" class="pick-list__items"></ul>
-      </div>
+        <div id="move-between-lists-btns" class="pick-list-buttons"></div>
 
-      <div id="move-between-lists-btns" class="pick-list-buttons"></div>
-
-      <div class="pick-list">
-        <div class="pick-list__header">Selected</div>
-        <div class="pick-list__filter-container">
-          <div class="pick-list__filter">
-            <input
-              id="${this.uid}-selected-filter-input"
-              type="text"
-              placeholder="Search by name"
-            />
-            <span class="material-symbols-outlined pick-list__search-icon">
-              search
-            </span>
+        <div class="pick-list">
+          <div class="pick-list__header">Selected</div>
+          <div class="pick-list__filter-container">
+            <div class="pick-list__filter">
+              <input
+                id="${this.uid}-selected-filter-input"
+                type="text"
+                placeholder="Search by name"
+              />
+              <span class="material-symbols-outlined pick-list__search-icon">
+                search
+              </span>
+            </div>
           </div>
+          <ul id="selected-items" class="pick-list__items"></ul>
         </div>
-        <ul id="selected-items" class="pick-list__items"></ul>
-      </div>
 
-      <div id="selected-btns" class="pick-list-buttons"></div>
+        <div id="selected-btns" class="pick-list-buttons"></div>
+      </div>
     `;
 
     this.$availableItemsContainer =
@@ -262,6 +274,11 @@ export class ArrangeBox {
     this.attachEventListeners();
 
     this.renderControlButtons(
+      $arrangeBoxContainer.querySelector('#other-btns')!,
+      this.otherControlButtons
+    );
+
+    this.renderControlButtons(
       $arrangeBoxContainer.querySelector('#available-btns')!,
       this.controlAvailableButtons
     );
@@ -283,14 +300,21 @@ export class ArrangeBox {
 
   private renderControlButtons(
     $container: HTMLElement,
-    buttons: { id: string; listener: () => void; icon: string }[]
+    buttons: ControlButton[]
   ) {
-    buttons.forEach(({ id, listener, icon }) => {
+    buttons.forEach(({ id, listener, icon, text }) => {
       const $button = document.createElement('button');
       $button.id = id;
-      $button.innerHTML = /* HTML */ `
-        <span class="material-symbols-outlined"> ${icon} </span>
-      `;
+      if (icon) {
+        $button.insertAdjacentHTML(
+          'beforeend',
+          `<span class="material-symbols-outlined"> ${icon} </span>`
+        );
+      }
+      if (text) {
+        $button.insertAdjacentHTML('beforeend', `<span>${text}</span>`);
+      }
+
       $button.addEventListener('click', listener);
       this.willBeCalledOnDestroy.push(() => {
         $button.removeEventListener('click', listener);

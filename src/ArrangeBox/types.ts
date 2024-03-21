@@ -3,3 +3,10 @@ export interface InputItem {
   node: HTMLElement | string;
   name: string;
 }
+
+export interface ControlButton {
+  id: string;
+  listener(): void;
+  icon?: string;
+  text?: string;
+}
