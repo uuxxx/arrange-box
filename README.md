@@ -1,8 +1,9 @@
 # Использование
 
-Добавляет контрол в указанный родительский контейнер, устанавливая начальные значения available и selected.
-
+### Добавляет контрол в указанный родительский контейнер, устанавливая начальные значения available и selected.
+```JavaScript
 const arrangeBox = new ArrangeBox(container: HTMLElement, available: {id: string; name: string; node: HTMLElement});
+```
 
 Поле name используется для поиска.
 
