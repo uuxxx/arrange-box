@@ -405,6 +405,8 @@ export class ArrangeBox {
     const sortableAvailable = new Sortable(this.$availableItemsContainer, {
       group: this.uid,
       animation: 150,
+      delay: 100,
+      delayOnTouchOnly: true,
       store: {
         get: () => {
           return this.availableIds;
