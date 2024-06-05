@@ -1,23 +1,19 @@
 /* reset */
 
 * {
-	vertical-align: baseline;
-	font-weight: inherit;
-	font-family: inherit;
-	font-style: inherit;
-	font-size: 100%;
-	border: 0 none;
-	outline: 0;
-	padding: 0;
-	margin: 0;
+  vertical-align: baseline;
+  font-weight: inherit;
+  font-family: inherit;
+  font-style: inherit;
+  font-size: 100%;
+  border: 0 none;
+  outline: 0;
+  padding: 0;
+  margin: 0;
 }
 
 .material-symbols-outlined {
-  font-variation-settings:
-  'FILL' 0,
-  'wght' 400,
-  'GRAD' 0,
-  'opsz' 24
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
 }
 
 :root {
@@ -55,7 +51,7 @@ body {
 
 .add-control:hover {
   cursor: pointer;
-  opacity: .8;
+  opacity: 0.8;
 }
 
 #app {
@@ -96,7 +92,8 @@ body {
   gap: 10px;
 }
 
-.pick-list-buttons > button, #other-btns > button {
+.pick-list-buttons > button,
+#other-btns > button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -104,10 +101,17 @@ body {
   border-radius: 6px;
   background: var(--button-background-color);
 
-  transition: background .2s;
+  transition: background 0.2s;
 }
 
-.pick-list-buttons > button:enabled:hover, #other-btns > button:enabled:hover {
+.pick-list-buttons > button {
+  width: 44px;
+  height: 44px;
+  overflow: hidden;
+}
+
+.pick-list-buttons > button:enabled:hover,
+#other-btns > button:enabled:hover {
   cursor: pointer;
   background: var(--button-background-on-hover);
 }
@@ -124,7 +128,6 @@ body {
   padding: 10px;
   border-bottom: 1px solid var(--card-border-color);
 }
-
 
 .pick-list__filter-container {
   padding: 1.25rem;
@@ -151,6 +154,7 @@ body {
 }
 
 .pick-list__items {
+  position: relative;
   height: 400px;
   overflow-y: auto;
   overflow-x: hidden;
@@ -197,7 +201,6 @@ body {
 .pick-list__item__price {
   font-weight: 700;
 }
-
 
 @media screen and (max-width: 900px) {
   .arrange-box-main {
