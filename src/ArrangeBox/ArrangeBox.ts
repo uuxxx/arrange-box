@@ -1,99 +1,99 @@
-import Sortable from 'sortablejs';
-import { ArrangeBoxElement } from './ArrangeBoxElement';
-import { InputItem, ControlButton } from './types';
-import { debounce } from '../utils';
+import Sortable from "sortablejs";
+import { ArrangeBoxElement } from "./ArrangeBoxElement";
+import { InputItem, ControlButton } from "./types";
+import { debounce } from "../utils";
 
 export class ArrangeBox {
   private uid = `_${crypto.randomUUID()}`;
 
   private controlAvailableButtons: ControlButton[] = [
     {
-      id: 'available-up',
-      listener: () => this.moveFocusedUp('available'),
-      icon: 'keyboard_arrow_up',
+      id: "available-up",
+      listener: () => this.moveFocusedUp("available"),
+      icon: "keyboard_arrow_up",
     },
     {
-      id: 'available-up-to-top',
-      listener: () => this.moveFocusedToTheTop('available'),
-      icon: 'keyboard_double_arrow_up',
+      id: "available-up-to-top",
+      listener: () => this.moveFocusedToTheTop("available"),
+      icon: "keyboard_double_arrow_up",
     },
     {
-      id: 'available-down',
-      listener: () => this.moveFocusedDown('available'),
-      icon: 'keyboard_arrow_down',
+      id: "available-down",
+      listener: () => this.moveFocusedDown("available"),
+      icon: "keyboard_arrow_down",
     },
     {
-      id: 'available-down-to-bottom',
-      listener: () => this.moveFocusedToTheBottom('available'),
-      icon: 'keyboard_double_arrow_down',
+      id: "available-down-to-bottom",
+      listener: () => this.moveFocusedToTheBottom("available"),
+      icon: "keyboard_double_arrow_down",
     },
   ];
   private controlMovingBetweenListsButtons: ControlButton[] = [
     {
-      id: 'focused-from-available-to-selected',
+      id: "focused-from-available-to-selected",
       listener: () => this.moveFocusedSelectedToAvailable(),
-      icon: 'keyboard_arrow_left',
+      icon: "keyboard_arrow_left",
     },
     {
-      id: 'all-from-available-to-selected',
-      listener: () => this.moveAll('selected'),
-      icon: 'keyboard_double_arrow_left',
+      id: "all-from-available-to-selected",
+      listener: () => this.moveAll("selected"),
+      icon: "keyboard_double_arrow_left",
     },
     {
-      id: 'focused-from-selected-to-available',
+      id: "focused-from-selected-to-available",
       listener: () => this.moveFocusedAvailableToSelected(),
-      icon: 'keyboard_arrow_right',
+      icon: "keyboard_arrow_right",
     },
     {
-      id: 'all-from-selected-to-available',
-      listener: () => this.moveAll('available'),
-      icon: 'keyboard_double_arrow_right',
+      id: "all-from-selected-to-available",
+      listener: () => this.moveAll("available"),
+      icon: "keyboard_double_arrow_right",
     },
   ];
   private controlSelectedButtons: ControlButton[] = [
     {
-      id: 'selected-up',
-      listener: () => this.moveFocusedUp('selected'),
-      icon: 'keyboard_arrow_up',
+      id: "selected-up",
+      listener: () => this.moveFocusedUp("selected"),
+      icon: "keyboard_arrow_up",
     },
     {
-      id: 'selected-up-to-top',
-      listener: () => this.moveFocusedToTheTop('selected'),
-      icon: 'keyboard_double_arrow_up',
+      id: "selected-up-to-top",
+      listener: () => this.moveFocusedToTheTop("selected"),
+      icon: "keyboard_double_arrow_up",
     },
     {
-      id: 'selected-down',
-      listener: () => this.moveFocusedDown('selected'),
-      icon: 'keyboard_arrow_down',
+      id: "selected-down",
+      listener: () => this.moveFocusedDown("selected"),
+      icon: "keyboard_arrow_down",
     },
     {
-      id: 'selected-down-to-bottom',
-      listener: () => this.moveFocusedToTheBottom('selected'),
-      icon: 'keyboard_double_arrow_down',
+      id: "selected-down-to-bottom",
+      listener: () => this.moveFocusedToTheBottom("selected"),
+      icon: "keyboard_double_arrow_down",
     },
   ];
   private otherControlButtons: ControlButton[] = [
-    { id: 'reset', listener: () => this.reset(), text: 'reset' },
+    { id: "reset", listener: () => this.reset(), text: "reset" },
     {
-      id: 'log state',
+      id: "log state",
       listener: () => console.log(this.getState()),
-      text: 'log state',
+      text: "log state",
     },
-    { id: 'destroy', listener: () => this.destroy(), text: 'destroy' },
+    { id: "destroy", listener: () => this.destroy(), text: "destroy" },
   ];
 
-  private arrangeBoxElementsMap: { [x: InputItem['id']]: ArrangeBoxElement } =
+  private arrangeBoxElementsMap: { [x: InputItem["id"]]: ArrangeBoxElement } =
     {};
 
   private initialState: {
-    available: InputItem['id'][];
-    selected: InputItem['id'][];
+    available: InputItem["id"][];
+    selected: InputItem["id"][];
   } = { available: [], selected: [] };
 
-  private availableIds: InputItem['id'][];
-  private selectedIds: InputItem['id'][];
-  private readonly focusedAvailableIds = new Set<InputItem['id']>();
-  private readonly focusedSelectedIds = new Set<InputItem['id']>();
+  private availableIds: InputItem["id"][];
+  private selectedIds: InputItem["id"][];
+  private readonly focusedAvailableIds = new Set<InputItem["id"]>();
+  private readonly focusedSelectedIds = new Set<InputItem["id"]>();
 
   private $arrangeBoxContainer!: HTMLElement;
   private $availableItemsContainer!: HTMLElement;
@@ -110,7 +110,7 @@ export class ArrangeBox {
   ) {
     this.availableIds = availableElements.map((el) => {
       if (el.id in this.arrangeBoxElementsMap) {
-        throw new Error('all ids must be unique!');
+        throw new Error("all ids must be unique!");
       }
       this.arrangeBoxElementsMap[el.id] = new ArrangeBoxElement(el);
       return el.id;
@@ -118,7 +118,7 @@ export class ArrangeBox {
 
     this.selectedIds = selectedElements.map((el) => {
       if (el.id in this.arrangeBoxElementsMap) {
-        throw new Error('all ids must be unique!');
+        throw new Error("all ids must be unique!");
       }
       this.arrangeBoxElementsMap[el.id] = new ArrangeBoxElement(el);
       return el.id;
@@ -163,8 +163,8 @@ export class ArrangeBox {
     this.focusedAvailableIds.clear();
     this.focusedSelectedIds.clear();
 
-    this.$availableItemsContainer.innerHTML = '';
-    this.$selectedItemsContainer.innerHTML = '';
+    this.$availableItemsContainer.innerHTML = "";
+    this.$selectedItemsContainer.innerHTML = "";
 
     this.selectedIds.forEach((id) => {
       const arrangeBox = this.arrangeBoxElementsMap[id];
@@ -177,7 +177,7 @@ export class ArrangeBox {
     });
   }
 
-  public focus(...ids: InputItem['id'][]) {
+  public focus(...ids: InputItem["id"][]) {
     const selectedIds = new Set(this.selectedIds);
 
     for (const targetId of ids) {
@@ -200,9 +200,9 @@ export class ArrangeBox {
   }
 
   private render() {
-    const $arrangeBoxContainer = document.createElement('div');
+    const $arrangeBoxContainer = document.createElement("div");
     this.$arrangeBoxContainer = $arrangeBoxContainer;
-    $arrangeBoxContainer.classList.add('arrange-box');
+    $arrangeBoxContainer.classList.add("arrange-box");
     $arrangeBoxContainer.innerHTML = /* HTML */ `
       <div id="other-btns"></div>
       <div class="arrange-box-main">
@@ -249,9 +249,9 @@ export class ArrangeBox {
     `;
 
     this.$availableItemsContainer =
-      $arrangeBoxContainer.querySelector('#available-items')!;
+      $arrangeBoxContainer.querySelector("#available-items")!;
     this.$selectedItemsContainer =
-      $arrangeBoxContainer.querySelector('#selected-items')!;
+      $arrangeBoxContainer.querySelector("#selected-items")!;
 
     this.$availableInput = $arrangeBoxContainer.querySelector(
       `#${this.uid}-available-filter-input`
@@ -274,22 +274,22 @@ export class ArrangeBox {
     this.attachEventListeners();
 
     this.renderControlButtons(
-      $arrangeBoxContainer.querySelector('#other-btns')!,
+      $arrangeBoxContainer.querySelector("#other-btns")!,
       this.otherControlButtons
     );
 
     this.renderControlButtons(
-      $arrangeBoxContainer.querySelector('#available-btns')!,
+      $arrangeBoxContainer.querySelector("#available-btns")!,
       this.controlAvailableButtons
     );
 
     this.renderControlButtons(
-      $arrangeBoxContainer.querySelector('#move-between-lists-btns')!,
+      $arrangeBoxContainer.querySelector("#move-between-lists-btns")!,
       this.controlMovingBetweenListsButtons
     );
 
     this.renderControlButtons(
-      $arrangeBoxContainer.querySelector('#selected-btns')!,
+      $arrangeBoxContainer.querySelector("#selected-btns")!,
       this.controlSelectedButtons
     );
 
@@ -303,21 +303,21 @@ export class ArrangeBox {
     buttons: ControlButton[]
   ) {
     buttons.forEach(({ id, listener, icon, text }) => {
-      const $button = document.createElement('button');
+      const $button = document.createElement("button");
       $button.id = id;
       if (icon) {
         $button.insertAdjacentHTML(
-          'beforeend',
+          "beforeend",
           `<span class="material-symbols-outlined"> ${icon} </span>`
         );
       }
       if (text) {
-        $button.insertAdjacentHTML('beforeend', `<span>${text}</span>`);
+        $button.insertAdjacentHTML("beforeend", `<span>${text}</span>`);
       }
 
-      $button.addEventListener('click', listener);
+      $button.addEventListener("click", listener);
       this.willBeCalledOnDestroy.push(() => {
-        $button.removeEventListener('click', listener);
+        $button.removeEventListener("click", listener);
       });
       $container.appendChild($button);
     });
@@ -325,37 +325,37 @@ export class ArrangeBox {
 
   private attachEventListeners() {
     this.$availableItemsContainer.addEventListener(
-      'click',
+      "click",
       this.onAvailableClick
     );
 
     this.willBeCalledOnDestroy.push(() => {
       this.$availableItemsContainer.removeEventListener(
-        'click',
+        "click",
         this.onAvailableClick
       );
     });
 
     this.$selectedItemsContainer.addEventListener(
-      'click',
+      "click",
       this.onSelectedClick
     );
 
     this.willBeCalledOnDestroy.push(() => {
       this.$selectedItemsContainer.removeEventListener(
-        'click',
+        "click",
         this.onSelectedClick
       );
     });
 
-    this.$availableInput.addEventListener('input', this.onAvailableInput);
+    this.$availableInput.addEventListener("input", this.onAvailableInput);
     this.willBeCalledOnDestroy.push(() => {
-      this.$availableInput.removeEventListener('input', this.onAvailableInput);
+      this.$availableInput.removeEventListener("input", this.onAvailableInput);
     });
 
-    this.$selectedInput.addEventListener('input', this.onSelectedInput);
+    this.$selectedInput.addEventListener("input", this.onSelectedInput);
     this.willBeCalledOnDestroy.push(() => {
-      this.$selectedInput.removeEventListener('input', this.onSelectedInput);
+      this.$selectedInput.removeEventListener("input", this.onSelectedInput);
     });
   }
 
@@ -428,6 +428,8 @@ export class ArrangeBox {
     const sortableSelected = new Sortable(this.$selectedItemsContainer, {
       group: this.uid,
       animation: 150,
+      delay: 100,
+      delayOnTouchOnly: true,
       store: {
         get: () => {
           return this.selectedIds;
@@ -451,12 +453,12 @@ export class ArrangeBox {
     };
   }
 
-  private getListInfo(list: 'available' | 'selected') {
+  private getListInfo(list: "available" | "selected") {
     let $container: HTMLElement;
-    let ids: InputItem['id'][];
-    let focusedIds: Set<InputItem['id']>;
+    let ids: InputItem["id"][];
+    let focusedIds: Set<InputItem["id"]>;
 
-    if (list === 'available') {
+    if (list === "available") {
       $container = this.$availableItemsContainer;
       ids = this.availableIds;
       focusedIds = this.focusedAvailableIds;
@@ -473,15 +475,15 @@ export class ArrangeBox {
     };
   }
 
-  public moveAll(from: 'available' | 'selected') {
+  public moveAll(from: "available" | "selected") {
     let $from: HTMLElement;
-    let fromIds: InputItem['id'][];
-    let fromFocusedIds: Set<InputItem['id']>;
+    let fromIds: InputItem["id"][];
+    let fromFocusedIds: Set<InputItem["id"]>;
     let $to: HTMLElement;
-    let toIds: InputItem['id'][];
-    let toFocusedIds: Set<InputItem['id']>;
+    let toIds: InputItem["id"][];
+    let toFocusedIds: Set<InputItem["id"]>;
 
-    if (from === 'available') {
+    if (from === "available") {
       $from = this.$availableItemsContainer;
       fromIds = this.availableIds;
       fromFocusedIds = this.focusedAvailableIds;
@@ -496,13 +498,13 @@ export class ArrangeBox {
       toIds = this.availableIds;
       toFocusedIds = this.focusedAvailableIds;
     }
-    $from.innerHTML = '';
+    $from.innerHTML = "";
     fromIds.forEach((id) => {
       toIds.push(id);
       this.arrangeBoxElementsMap[id].append($to);
     });
 
-    if (from === 'available') {
+    if (from === "available") {
       this.availableIds = [];
     } else {
       this.selectedIds = [];
@@ -546,11 +548,11 @@ export class ArrangeBox {
     });
   }
 
-  public moveFocusedToTheTop(list: 'available' | 'selected') {
+  public moveFocusedToTheTop(list: "available" | "selected") {
     const { $container, ids, focusedIds } = this.getListInfo(list);
 
-    const selected: InputItem['id'][] = [];
-    const notSelected: InputItem['id'][] = [];
+    const selected: InputItem["id"][] = [];
+    const notSelected: InputItem["id"][] = [];
 
     for (const id of ids) {
       if (focusedIds.has(id)) {
@@ -560,7 +562,7 @@ export class ArrangeBox {
       }
     }
 
-    if (list === 'selected') {
+    if (list === "selected") {
       this.selectedIds = [...selected, ...notSelected];
     } else {
       this.availableIds = [...selected, ...notSelected];
@@ -579,11 +581,11 @@ export class ArrangeBox {
     $container.scroll({ top: 0 });
   }
 
-  public moveFocusedToTheBottom(list: 'available' | 'selected') {
+  public moveFocusedToTheBottom(list: "available" | "selected") {
     const { $container, ids, focusedIds } = this.getListInfo(list);
 
-    const selected: InputItem['id'][] = [];
-    const notSelected: InputItem['id'][] = [];
+    const selected: InputItem["id"][] = [];
+    const notSelected: InputItem["id"][] = [];
 
     for (const id of ids) {
       if (focusedIds.has(id)) {
@@ -593,7 +595,7 @@ export class ArrangeBox {
       }
     }
 
-    if (list === 'selected') {
+    if (list === "selected") {
       this.selectedIds = [...notSelected, ...selected];
     } else {
       this.availableIds = [...notSelected, ...selected];
@@ -612,7 +614,7 @@ export class ArrangeBox {
     $container.scroll({ top: $container.scrollHeight });
   }
 
-  public moveFocusedUp(list: 'available' | 'selected') {
+  public moveFocusedUp(list: "available" | "selected") {
     const { $container, ids, focusedIds } = this.getListInfo(list);
 
     for (let i = 0; i < ids.length; i++) {
@@ -625,14 +627,21 @@ export class ArrangeBox {
         const temp = ids[i - 1];
         const referenceElement = this.arrangeBoxElementsMap[temp].node;
         $container.insertBefore(arrangeBox.node, referenceElement);
-        arrangeBox.node.scrollIntoView();
+
+        const { offsetTop } = arrangeBox.node;
+        const delta = $container.scrollTop - offsetTop;
+
+        if (delta > 0) {
+          $container.scrollBy({ top: -delta });
+        }
+
         ids[i - 1] = id;
         ids[i] = temp;
       }
     }
   }
 
-  public moveFocusedDown(list: 'available' | 'selected') {
+  public moveFocusedDown(list: "available" | "selected") {
     const { $container, ids, focusedIds } = this.getListInfo(list);
 
     for (let i = ids.length - 1; i >= 0; i--) {
@@ -646,7 +655,19 @@ export class ArrangeBox {
         const referenceElement = this.arrangeBoxElementsMap[temp].node;
         $container.insertBefore(referenceElement, arrangeBox.node);
 
-        arrangeBox.node.scrollIntoView();
+        const { offsetTop, offsetHeight } = arrangeBox.node;
+
+        const delta =
+          offsetTop +
+          offsetHeight -
+          ($container.scrollTop + $container.offsetHeight);
+
+        if (delta > 0) {
+          $container.scrollBy({
+            top: delta,
+          });
+        }
+
         ids[i + 1] = id;
         ids[i] = temp;
       }
@@ -654,10 +675,10 @@ export class ArrangeBox {
   }
 
   // search
-  private onSearch(e: Event, filterList: 'available' | 'selected') {
+  private onSearch(e: Event, filterList: "available" | "selected") {
     const query = (e.target as HTMLInputElement).value.toLocaleLowerCase();
     const ids =
-      filterList === 'available' ? this.availableIds : this.selectedIds;
+      filterList === "available" ? this.availableIds : this.selectedIds;
 
     for (const id of ids) {
       const arrangeBox = this.arrangeBoxElementsMap[id];
@@ -670,10 +691,10 @@ export class ArrangeBox {
   }
 
   private onSelectedInput(e: Event) {
-    this.onSearch(e, 'selected');
+    this.onSearch(e, "selected");
   }
 
   private onAvailableInput(e: Event) {
-    this.onSearch(e, 'available');
+    this.onSearch(e, "available");
   }
 }
